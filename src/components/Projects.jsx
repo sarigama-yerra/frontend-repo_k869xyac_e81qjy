@@ -1,25 +1,30 @@
 import { motion } from 'framer-motion'
 import { ExternalLink } from 'lucide-react'
+import ShaderTile from './ShaderTile'
+import { neonGrid, plasma, particleFlow } from './shaders'
 
 const projects = [
   {
     title: 'Neon Grid Shader',
-    description: 'A customizable WebGL fragment shader that renders an infinite neon grid with chromatic aberration and bloom post-processing.',
+    description: 'An infinite neon grid with glow and subtle scanlines. Move your cursor to interact.',
     tags: ['WebGL', 'GLSL', 'PostFX'],
-    link: '#'
+    link: '#',
+    frag: neonGrid,
   },
   {
-    title: 'Holographic UI Kit',
-    description: 'A motion-first component kit inspired by sci‑fi HUDs with layered glass, glow, and parallax interactions.',
-    tags: ['Framer Motion', 'Design', 'UI'],
-    link: '#'
+    title: 'Holographic Plasma',
+    description: 'A holographic plasma field with color cycling and bloom-like accents.',
+    tags: ['GLSL', 'Procedural'],
+    link: '#',
+    frag: plasma,
   },
   {
-    title: 'Cosmic Particles',
-    description: 'GPU-accelerated particle playground with field equations and spline-controlled camera animations.',
-    tags: ['Three.js', 'GPGPU', 'Shaders'],
-    link: '#'
-  }
+    title: 'Cosmic Particle Flow',
+    description: 'Field-driven particle glow that responds to your mouse attractor.',
+    tags: ['WebGL', 'Flow Field'],
+    link: '#',
+    frag: particleFlow,
+  },
 ]
 
 export default function Projects() {
@@ -28,7 +33,7 @@ export default function Projects() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="max-w-2xl">
           <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight text-white">Selected work</h2>
-          <p className="mt-3 text-slate-300/80">A mix of shader experiments and interface explorations.</p>
+          <p className="mt-3 text-slate-300/80">Live shader previews running directly on the tiles.</p>
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -40,10 +45,16 @@ export default function Projects() {
               whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: i * 0.08 }}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 hover:bg-white/10 transition"
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition"
             >
-              <div className="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-gradient-to-br from-fuchsia-500/25 via-indigo-500/25 to-cyan-400/25 blur-2xl group-hover:scale-110 transition" />
-              <div className="relative">
+              {/* Shader preview */}
+              <div className="relative w-full aspect-[4/3]">
+                <ShaderTile frag={p.frag} className="absolute inset-0" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/10 to-transparent mix-blend-plus-lighter" />
+              </div>
+
+              {/* Content */}
+              <div className="relative z-10 p-6">
                 <h3 className="text-white font-semibold text-lg flex items-center gap-2">
                   {p.title}
                   <ExternalLink size={16} className="text-white/70" />
@@ -55,6 +66,9 @@ export default function Projects() {
                   ))}
                 </div>
               </div>
+
+              {/* Glow accent */}
+              <div className="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-gradient-to-br from-fuchsia-500/25 via-indigo-500/25 to-cyan-400/25 blur-2xl group-hover:scale-110 transition" />
             </motion.a>
           ))}
         </div>
